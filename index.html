@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA VI Countdown</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем красивый шрифт -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Фоновые изображения (слои) -->
+    <div class="bg" id="bg-morning"></div>
+    <div class="bg" id="bg-day"></div>
+    <div class="bg" id="bg-evening"></div>
+    <div class="bg" id="bg-night"></div>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <!-- Верхняя надпись с логотипом -->
+        <header class="top-header">
+            <span class="top-text">TIME UNTIL</span>
+            <img src="logo.png" alt="GTA VI" class="header-logo" id="logo-btn">
+        </header>
+
+        <!-- Огромный таймер в одну строку -->
+        <main class="timer-wrapper">
+            <div class="timer" id="timer">
+                <div class="timer-unit">
+                    <span id="days">00</span>
+                    <small>DAYS</small>
+                </div>
+                <div class="timer-unit">
+                    <span id="hours">00</span>
+                    <small>HOURS</small>
+                </div>
+                <div class="timer-unit">
+                    <span id="minutes">00</span>
+                    <small>MINS</small>
+                </div>
+                <div class="timer-unit">
+                    <span id="seconds">00</span>
+                    <small>SECS</small>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<!-- Аудиоплеер (скрыт по умолчанию) -->
+    <audio id="bg-music" src="music.mp3" loop></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

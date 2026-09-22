@@ -1,0 +1,142 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    background-color: #000;
+}
+
+/* Стили для фоновых слоев */
+.bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 1.5s ease-in-out;
+    opacity: 0;
+    z-index: 1;
+}
+
+#bg-morning { background-image: url('morning.jpg'); }
+#bg-day { background-image: url('day.jpg'); }
+#bg-evening { background-image: url('evening.jpg'); }
+#bg-night { background-image: url('night.jpg'); }
+
+/* Контейнер с контентом */
+.container {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    text-align: center;
+    padding: 3vh 10px;
+    pointer-events: none;
+}
+
+/* Шапка (Текст + Логотип) */
+.top-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 1vh;
+}
+
+.top-text {
+    font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+}
+
+.header-logo {
+    height: clamp(2rem, 4vw, 4rem);
+    width: auto;
+    filter: drop-shadow(2px 2px 15px rgba(0, 0, 0, 0.9));
+    
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    
+    /* ВОТ ЭТА СТРОКА ВКЛЮЧИТ КЛИКИ И НАВЕДЕНИЕ */
+    pointer-events: auto; 
+}
+
+.header-logo:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.6));
+}
+/* Эффект при наведении мыши */
+.header-logo:hover {
+    transform: scale(1.05); /* Логотип немного увеличивается */
+    filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.6)); /* Добавляется белое свечение */
+}
+/* Обертка таймера */
+.timer-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    max-width: 100%;
+    padding: 0 10px;
+}
+
+/* Стили таймера (строго в одну строку) */
+.timer {
+    display: flex;
+    flex-wrap: nowrap; /* ЗАПРЕЩАЕМ перенос на другую строку */
+    justify-content: center;
+    gap: clamp(0.5rem, 2vw, 3rem); /* Отступы сжимаются на маленьких экранах */
+    width: 100%;
+}
+
+.timer-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Огромные цифры, которые всегда влезают в экран */
+.timer-unit span {
+    font-size: clamp(3rem, 11vw, 16rem); /* 11vw означает 11% от ширины экрана */
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 4px 4px 25px rgba(0, 0, 0, 0.9);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Подписи под цифрами */
+.timer-unit small {
+    font-size: clamp(0.6rem, 1.5vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-top: 1vh;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Нижний текст */
+.bottom-footer {
+    width: 100%;
+    margin-bottom: 1vh;
+}
+
+.hint {
+    font-size: clamp(0.7rem, 1.2vw, 1rem);
+    font-weight: 700;
+    opacity: 0.8;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.9);
+}
