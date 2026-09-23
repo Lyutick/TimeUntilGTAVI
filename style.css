@@ -1,11 +1,3 @@
-/* Подключение кастомного шрифта */
-@font-face {
-    font-family: 'GTAFont'; /* Название, которое вы будете использовать в CSS */
-    src: url('GTAFont.ttf') format('truetype'); /* Имя вашего файла */
-    font-weight: normal;
-    font-style: normal;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -33,7 +25,6 @@ body {
     z-index: 1;
 }
 
-/* ВНИМАНИЕ: Проверьте расширения картинок (.jpg или .png) */
 #bg-morning { background-image: url('morning.jpg'); }
 #bg-day { background-image: url('day.jpg'); }
 #bg-evening { background-image: url('evening.jpg'); }
@@ -76,16 +67,14 @@ body {
     height: clamp(2rem, 4vw, 4rem);
     width: auto;
     filter: drop-shadow(2px 2px 15px rgba(0, 0, 0, 0.9));
-    
     cursor: pointer;
     transition: transform 0.3s ease, filter 0.3s ease;
-    pointer-events: auto; /* Включаем клики по логотипу */
+    pointer-events: auto;
 }
 
-/* Эффект при наведении мыши */
 .header-logo:hover {
-    transform: scale(1.05); 
-    filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.6)); 
+    transform: scale(1.05);
+    filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.6));
 }
 
 /* Обертка таймера */
@@ -102,9 +91,9 @@ body {
 /* Стили таймера (строго в одну строку) */
 .timer {
     display: flex;
-    flex-wrap: nowrap; 
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: clamp(0.5rem, 2vw, 3rem); 
+    gap: clamp(0.5rem, 2vw, 3rem);
     width: 100%;
 }
 
@@ -116,9 +105,8 @@ body {
 
 /* Огромные цифры, которые всегда влезают в экран */
 .timer-unit span {
-    font-family: 'GTAFont', sans-serif; /* ПРИМЕНЯЕМ КАСТОМНЫЙ ШРИФТ */
-    font-size: clamp(3rem, 11vw, 16rem); 
-    font-weight: 900; /* Если у вашего шрифта нет жирного начертания, поставьте normal */
+    font-size: clamp(3rem, 11vw, 16rem);
+    font-weight: 900;
     line-height: 1;
     text-shadow: 4px 4px 25px rgba(0, 0, 0, 0.9);
     font-variant-numeric: tabular-nums;
@@ -126,7 +114,6 @@ body {
 
 /* Подписи под цифрами */
 .timer-unit small {
-    font-family: 'GTAFont', sans-serif; /* Можно применить шрифт и к подписям (DAYS, HOURS...) */
     font-size: clamp(0.6rem, 1.5vw, 1.5rem);
     font-weight: 700;
     letter-spacing: 2px;
