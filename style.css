@@ -1,4 +1,11 @@
-* {
+* /* Подключение кастомного шрифта */
+@font-face {
+    font-family: 'GTAFont'; /* Название, которое вы будете использовать в CSS */
+    src: url('GTAFont.ttf') format('truetype'); /* Имя вашего файла */
+    font-weight: normal;
+    font-style: normal;
+}
+{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
