@@ -10,7 +10,9 @@ body {
     background-color: #000;
 }
 
-/* Стили для фоновых слоев */
+/* ============================================================
+   ФОНОВЫЕ СЛОИ + PARALLAX
+   ============================================================ */
 .bg {
     position: fixed;
     top: 0;
@@ -23,6 +25,7 @@ body {
     transition: opacity 1.5s ease-in-out;
     opacity: 0;
     z-index: 1;
+    will-change: transform, opacity;
 }
 
 #bg-morning { background-image: url('morning.jpg'); }
@@ -30,7 +33,9 @@ body {
 #bg-evening { background-image: url('evening.jpg'); }
 #bg-night { background-image: url('night.jpg'); }
 
-/* Контейнер с контентом */
+/* ============================================================
+   КОНТЕЙНЕР + ПЛАВНОЕ ПОЯВЛЕНИЕ (п. 6)
+   ============================================================ */
 .container {
     position: relative;
     z-index: 2;
@@ -43,6 +48,18 @@ body {
     text-align: center;
     padding: 3vh 10px;
     pointer-events: none;
+    animation: fadeInUp 1.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Шапка (Текст + Логотип) */
@@ -103,14 +120,16 @@ body {
     align-items: center;
 }
 
-/* Огромные цифры, которые всегда влезают в экран */
+/* Огромные цифры. display: inline-block нужен для анимации (п. 9) */
 .timer-unit span {
+    display: inline-block;
     font-size: clamp(3rem, 11vw, 16rem);
     font-weight: 900;
     line-height: 1;
     color: #ffffff;
     text-shadow: 4px 4px 25px rgba(0, 0, 0, 0.9);
     font-variant-numeric: tabular-nums;
+    will-change: transform, opacity;
 }
 
 /* Подписи под цифрами */
@@ -121,4 +140,44 @@ body {
     margin-top: 1vh;
     color: #ffffff;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* ============================================================
+   ПРОГРЕСС-БАР (п. 15)
+   ============================================================ */
+.progress-wrapper {
+    width: min(600px, 80vw);
+    margin-bottom: 1vh;
+    pointer-events: none;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff00ff 0%, #ff8c00 100%);
+    border-radius: 4px;
+    transition: width 1s linear;
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.6);
+}
+
+.progress-text {
+    margin-top: 10px;
+    font-size: clamp(0.7rem, 1.2vw, 1rem);
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #ffffff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+    text-transform: uppercase;
 }
