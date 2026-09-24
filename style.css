@@ -103,55 +103,17 @@ body {
     align-items: center;
 }
 
-/* ============================================================
-   ЦИФРЫ ТАЙМЕРА С АНИМИРОВАННЫМ ГРАДИЕНТОМ
-   ============================================================ */
+/* Огромные цифры, которые всегда влезают в экран */
 .timer-unit span {
-    /* Градиент в стиле GTA VI: розовый → оранжевый → фиолетовый → розовый */
-    background: linear-gradient(
-        135deg,
-        #ff00ff 0%,
-        #ff8c00 25%,
-        #ff00ff 50%,
-        #8a2be2 75%,
-        #ff00ff 100%
-    );
-    background-size: 300% 300%;
-    
-    /* Применяем градиент к тексту */
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent; /* На случай, если -webkit не сработает */
-    
-    /* Анимация градиента */
-    animation: gradientShift 6s ease infinite;
-    
-    /* Размер и жирность */
     font-size: clamp(3rem, 11vw, 16rem);
     font-weight: 900;
     line-height: 1;
+    color: #ffffff;
+    text-shadow: 4px 4px 25px rgba(0, 0, 0, 0.9);
     font-variant-numeric: tabular-nums;
-    
-    /* Тень теперь через drop-shadow, т.к. text-shadow не работает с прозрачным текстом */
-    filter: drop-shadow(4px 4px 15px rgba(0, 0, 0, 0.8))
-            drop-shadow(0 0 20px rgba(255, 0, 128, 0.3));
 }
 
-/* Анимация переливания градиента */
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* Подписи под цифрами (DAYS, HOURS, MINS, SECS) */
+/* Подписи под цифрами */
 .timer-unit small {
     font-size: clamp(0.6rem, 1.5vw, 1.5rem);
     font-weight: 700;
