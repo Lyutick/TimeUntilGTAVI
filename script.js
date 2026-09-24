@@ -2,19 +2,51 @@
 // 1. НАСТРОЙКИ
 // ============================================================
 
-// УСТАНОВИТЕ ДАТУ ВЫХОДА GTA VI ЗДЕСЬ (формат: 'YYYY-MM-DDTHH:MM:SS')
+// Дата выхода GTA VI (конец отсчёта)
 const targetDate = new Date('2026-11-19T00:00:00').getTime();
 
-// ============================================================
-// 2. ТАЙМЕР ОБРАТНОГО ОТСЧЁТА
-// ============================================================
+// Дата анонса GTA VI (начало для прогресс-бара)
+// 4 декабря 2023 — день выхода первого трейлера GTA VI
+const startDate = new Date('2023-12-04T00:00:00').getTime();
 
+// ============================================================
+// 2. АНИМАЦИЯ СМЕНЫ ЦИФР (п. 9)
+// ============================================================
+function setDigit(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const newVal = value.toString().padStart(2, '0');
+    if (el.innerText === newVal) return;
+
+    // 1) Уводим старую цифру вверх и делаем прозрачной
+    el.style.transition = 'transform 0.15s ease-in, opacity 0.15s ease-in';
+    el.style.transform = 'translateY(-0.6em)';
+    el.style.opacity = '0';
+
+    // 2) В середине анимации меняем значение и готовим новую цифру снизу
+    setTimeout(() => {
+        el.innerText = newVal;
+        el.style.transition = 'none';
+        el.style.transform = 'translateY(0.6em)';
+        void el.offsetWidth; // форсируем reflow
+        // 3) Плавно возвращаем на место
+        el.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+        el.style.transform = 'translateY(0)';
+        el.style.opacity = '1';
+    }, 150);
+}
+
+// ============================================================
+// 3. ТАЙМЕР ОБРАТНОГО ОТСЧЁТА
+// ============================================================
 function updateTimer() {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
     if (distance < 0) {
-        document.getElementById('timer').innerHTML = "<h2 style='font-size: 5vw;'>GTA VI IS OUT!</h2>";
+        document.getElementById('timer').innerHTML =
+            "<h2 style='font-size: 5vw;'>GTA VI IS OUT!</h2>";
         return;
     }
 
@@ -23,84 +55,98 @@ function updateTimer() {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Добавляем ведущие нули
-    document.getElementById('days').innerText = days.toString().padStart(2, '0');
-    document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
-    document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
-    document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+    setDigit('days', days);
+    setDigit('hours', hours);
+    setDigit('minutes', minutes);
+    setDigit('seconds', seconds);
 }
 
 // ============================================================
-// 3. СМЕНА ФОНА В ЗАВИСИМОСТИ ОТ ВРЕМЕНИ СУТОК
+// 4. ПРОГРЕСС-БАР (п. 15)
 // ============================================================
+function updateProgress() {
+    const now = new Date().getTime();
+    const total = targetDate - startDate;
+    const passed = now - startDate;
 
-// Определяем, какой фон должен быть активен сейчас
+    let percent = (passed / total) * 100;
+    percent = Math.min(100, Math.max(0, percent));
+
+    const fill = document.getElementById('progress-fill');
+    const text = document.getElementById('progress-text');
+
+    if (fill) fill.style.width = percent.toFixed(2) + '%';
+    if (text) text.innerText = percent.toFixed(1) + '% WAITED';
+}
+
+// ============================================================
+// 5. СМЕНА ФОНА В ЗАВИСИМОСТИ ОТ ВРЕМЕНИ СУТОК
+// ============================================================
 function getCurrentBgId() {
     const hour = new Date().getHours();
 
-    if (hour >= 6 && hour < 12) {
-        return 'bg-morning';   // Утро: 06:00 – 11:59
-    } else if (hour >= 12 && hour < 18) {
-        return 'bg-day';       // День: 12:00 – 17:59
-    } else if (hour >= 18 && hour < 24) {
-        return 'bg-evening';   // Вечер: 18:00 – 23:59
-    } else {
-        return 'bg-night';     // Ночь: 00:00 – 05:59
-    }
+    if (hour >= 6 && hour < 12)  return 'bg-morning';
+    if (hour >= 12 && hour < 18) return 'bg-day';
+    if (hour >= 18 && hour < 24) return 'bg-evening';
+    return 'bg-night';
 }
 
-// Применяем нужный фон (плавно через CSS transition)
 function updateBackground() {
     const activeBgId = getCurrentBgId();
 
     document.querySelectorAll('.bg').forEach(bg => {
-        if (bg.id === activeBgId) {
-            bg.style.opacity = '1';   // Показываем
-        } else {
-            bg.style.opacity = '0';   // Скрываем
-        }
+        bg.style.opacity = (bg.id === activeBgId) ? '1' : '0';
     });
 }
 
-// Планируем следующее переключение ровно в момент смены времени суток
 function scheduleNextBackgroundChange() {
     const now = new Date();
     const currentHour = now.getHours();
 
-    // Определяем, в какой час произойдёт следующая смена
     let nextChangeHour;
-    if (currentHour < 6) {
-        nextChangeHour = 6;
-    } else if (currentHour < 12) {
-        nextChangeHour = 12;
-    } else if (currentHour < 18) {
-        nextChangeHour = 18;
-    } else {
-        nextChangeHour = 24; // Полночь (0:00 следующего дня)
-    }
+    if (currentHour < 6)       nextChangeHour = 6;
+    else if (currentHour < 12) nextChangeHour = 12;
+    else if (currentHour < 18) nextChangeHour = 18;
+    else                       nextChangeHour = 24;
 
-    // Вычисляем, сколько миллисекунд осталось до этого момента
     const nextChange = new Date(now);
     nextChange.setHours(nextChangeHour, 0, 0, 0);
     const msUntilChange = nextChange - now;
 
-    // Ставим таймер на точное время
     setTimeout(() => {
-        updateBackground();                 // Меняем фон
-        scheduleNextBackgroundChange();     // Планируем следующую смену
+        updateBackground();
+        scheduleNextBackgroundChange();
     }, msUntilChange);
 }
 
 // ============================================================
-// 4. УПРАВЛЕНИЕ МУЗЫКОЙ (клик по логотипу)
+// 6. PARALLAX-ЭФФЕКТ (п. 7)
 // ============================================================
+function applyParallax(x, y) {
+    document.querySelectorAll('.bg').forEach(bg => {
+        // scale(1.05) нужен, чтобы при сдвиге не было видно краёв
+        bg.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+    });
+}
 
+document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth  - 0.5) * 30; // ±15 px
+    const y = (e.clientY / window.innerHeight - 0.5) * 30;
+    applyParallax(x, y);
+});
+
+// Начальное положение фона (до первого движения мыши)
+applyParallax(0, 0);
+
+// ============================================================
+// 7. УПРАВЛЕНИЕ МУЗЫКОЙ
+// ============================================================
 function initMusic() {
     const logoBtn = document.getElementById('logo-btn');
     const bgMusic = document.getElementById('bg-music');
 
     if (!logoBtn || !bgMusic) {
-        console.warn('Элементы для музыки не найдены: проверьте id="logo-btn" и id="bg-music".');
+        console.warn('Элементы для музыки не найдены.');
         return;
     }
 
@@ -110,37 +156,34 @@ function initMusic() {
         if (isPlaying) {
             bgMusic.pause();
             isPlaying = false;
-            // Возвращаем обычную тень
             logoBtn.style.filter = 'drop-shadow(2px 2px 15px rgba(0, 0, 0, 0.9))';
         } else {
             bgMusic.play()
                 .then(() => {
                     isPlaying = true;
-                    // Неоновое свечение, пока играет музыка
                     logoBtn.style.filter = 'drop-shadow(0px 0px 25px rgba(255, 0, 128, 0.9))';
                 })
-                .catch(error => {
-                    console.error('Ошибка воспроизведения музыки:', error);
-                    // Можно показать пользователю подсказку, но не обязательно
-                });
+                .catch(error => console.error('Ошибка воспроизведения музыки:', error));
         }
     });
 }
 
 // ============================================================
-// 5. ЗАПУСК ВСЕГО
+// 8. ЗАПУСК
 // ============================================================
 
-// Таймер обновляем каждую секунду
+// Таймер — каждую секунду
 setInterval(updateTimer, 1000);
 updateTimer();
 
-// Инициализация фона
-updateBackground();                // Сразу при загрузке
-scheduleNextBackgroundChange();    // Запланировать переход в 06:00 / 12:00 / 18:00 / 00:00
+// Прогресс — каждую секунду (значение меняется плавно)
+setInterval(updateProgress, 1000);
+updateProgress();
 
-// Дополнительная проверка каждые 10 секунд (на случай ручной смены системного времени)
+// Фон — сразу + запланировать переход + резервная проверка раз в 10 секунд
+updateBackground();
+scheduleNextBackgroundChange();
 setInterval(updateBackground, 10000);
 
-// Инициализация музыки после полной загрузки DOM
+// Музыка — после загрузки DOM
 document.addEventListener('DOMContentLoaded', initMusic);
