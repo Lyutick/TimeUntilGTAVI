@@ -23,7 +23,7 @@ body {
     transition: opacity 1.5s ease-in-out;
     opacity: 0;
     z-index: 1;
-    will-change: transform, opacity;
+    will-change: opacity;
 }
 
 #bg-morning { background-image: url('morning.jpg'); }
@@ -31,7 +31,7 @@ body {
 #bg-evening { background-image: url('evening.jpg'); }
 #bg-night { background-image: url('night.jpg'); }
 
-/* Контейнер + плавное появление */
+/* Контейнер + плавное появление при загрузке */
 .container {
     position: relative;
     z-index: 2;
@@ -116,20 +116,24 @@ body {
     align-items: center;
 }
 
-/* Цифры — только прозрачность, без сдвигов */
+/* ============================================================
+   ЦИФРЫ — ТОЛЬКО ПЛАВНОЕ РАСТВОРЕНИЕ (без transform)
+   ============================================================ */
 .timer-unit span {
-    display: inline-block;
     font-size: clamp(3rem, 11vw, 16rem);
     font-weight: 900;
     line-height: 1;
     color: #ffffff;
     text-shadow: 4px 4px 25px rgba(0, 0, 0, 0.9);
     font-variant-numeric: tabular-nums;
+
+    /* transition ТОЛЬКО по opacity — никаких transform */
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
+    will-change: opacity;
 }
 
-/* Класс для плавного растворения */
+/* Класс для растворения */
 .timer-unit span.fade-out {
     opacity: 0;
 }
