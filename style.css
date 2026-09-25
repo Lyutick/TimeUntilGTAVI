@@ -10,9 +10,7 @@ body {
     background-color: #000;
 }
 
-/* ============================================================
-   ФОНОВЫЕ СЛОИ + PARALLAX
-   ============================================================ */
+/* Фоновые слои + parallax */
 .bg {
     position: fixed;
     top: 0;
@@ -33,9 +31,7 @@ body {
 #bg-evening { background-image: url('evening.jpg'); }
 #bg-night { background-image: url('night.jpg'); }
 
-/* ============================================================
-   КОНТЕЙНЕР + ПЛАВНОЕ ПОЯВЛЕНИЕ
-   ============================================================ */
+/* Контейнер + плавное появление */
 .container {
     position: relative;
     z-index: 2;
@@ -62,7 +58,7 @@ body {
     }
 }
 
-/* Шапка (Текст + Логотип) */
+/* Шапка */
 .top-header {
     display: flex;
     align-items: center;
@@ -105,7 +101,7 @@ body {
     padding: 0 10px;
 }
 
-/* Стили таймера (строго в одну строку) */
+/* Таймер — строго в одну строку */
 .timer {
     display: flex;
     flex-wrap: nowrap;
@@ -120,7 +116,7 @@ body {
     align-items: center;
 }
 
-/* Огромные цифры с плавным растворением */
+/* Цифры — только прозрачность, без сдвигов */
 .timer-unit span {
     display: inline-block;
     font-size: clamp(3rem, 11vw, 16rem);
@@ -133,12 +129,12 @@ body {
     transition: opacity 0.3s ease-in-out;
 }
 
-/* Класс, который делает цифру прозрачной */
+/* Класс для плавного растворения */
 .timer-unit span.fade-out {
     opacity: 0;
 }
 
-/* Подписи под цифрами */
+/* Подписи */
 .timer-unit small {
     font-size: clamp(0.6rem, 1.5vw, 1.5rem);
     font-weight: 700;
