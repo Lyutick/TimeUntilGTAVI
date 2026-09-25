@@ -2,15 +2,11 @@
 // 1. НАСТРОЙКИ
 // ============================================================
 
-// Дата выхода GTA VI (конец отсчёта)
+// Дата выхода GTA VI
 const targetDate = new Date('2026-11-19T00:00:00').getTime();
 
-// Дата анонса GTA VI (начало для прогресс-бара)
-// 4 декабря 2023 — день выхода первого трейлера GTA VI
-const startDate = new Date('2023-12-04T00:00:00').getTime();
-
 // ============================================================
-// 2. АНИМАЦИЯ СМЕНЫ ЦИФР (п. 9)
+// 2. ПЛАВНОЕ РАСТВОРЕНИЕ ЦИФР
 // ============================================================
 function setDigit(id, value) {
     const el = document.getElementById(id);
@@ -19,22 +15,14 @@ function setDigit(id, value) {
     const newVal = value.toString().padStart(2, '0');
     if (el.innerText === newVal) return;
 
-    // 1) Уводим старую цифру вверх и делаем прозрачной
-    el.style.transition = 'transform 0.15s ease-in, opacity 0.15s ease-in';
-    el.style.transform = 'translateY(-0.6em)';
-    el.style.opacity = '0';
+    // Плавно растворяем (CSS-переход 0.3s)
+    el.classList.add('fade-out');
 
-    // 2) В середине анимации меняем значение и готовим новую цифру снизу
+    // Когда цифра полностью исчезла — меняем значение и проявляем обратно
     setTimeout(() => {
         el.innerText = newVal;
-        el.style.transition = 'none';
-        el.style.transform = 'translateY(0.6em)';
-        void el.offsetWidth; // форсируем reflow
-        // 3) Плавно возвращаем на место
-        el.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
-        el.style.transform = 'translateY(0)';
-        el.style.opacity = '1';
-    }, 150);
+        el.classList.remove('fade-out');
+    }, 300);
 }
 
 // ============================================================
@@ -62,25 +50,7 @@ function updateTimer() {
 }
 
 // ============================================================
-// 4. ПРОГРЕСС-БАР (п. 15)
-// ============================================================
-function updateProgress() {
-    const now = new Date().getTime();
-    const total = targetDate - startDate;
-    const passed = now - startDate;
-
-    let percent = (passed / total) * 100;
-    percent = Math.min(100, Math.max(0, percent));
-
-    const fill = document.getElementById('progress-fill');
-    const text = document.getElementById('progress-text');
-
-    if (fill) fill.style.width = percent.toFixed(2) + '%';
-    if (text) text.innerText = percent.toFixed(1) + '% WAITED';
-}
-
-// ============================================================
-// 5. СМЕНА ФОНА В ЗАВИСИМОСТИ ОТ ВРЕМЕНИ СУТОК
+// 4. СМЕНА ФОНА В ЗАВИСИМОСТИ ОТ ВРЕМЕНИ СУТОК
 // ============================================================
 function getCurrentBgId() {
     const hour = new Date().getHours();
@@ -120,26 +90,24 @@ function scheduleNextBackgroundChange() {
 }
 
 // ============================================================
-// 6. PARALLAX-ЭФФЕКТ (п. 7)
+// 5. PARALLAX-ЭФФЕКТ
 // ============================================================
 function applyParallax(x, y) {
     document.querySelectorAll('.bg').forEach(bg => {
-        // scale(1.05) нужен, чтобы при сдвиге не было видно краёв
         bg.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
     });
 }
 
 document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth  - 0.5) * 30; // ±15 px
+    const x = (e.clientX / window.innerWidth  - 0.5) * 30;
     const y = (e.clientY / window.innerHeight - 0.5) * 30;
     applyParallax(x, y);
 });
 
-// Начальное положение фона (до первого движения мыши)
 applyParallax(0, 0);
 
 // ============================================================
-// 7. УПРАВЛЕНИЕ МУЗЫКОЙ
+// 6. УПРАВЛЕНИЕ МУЗЫКОЙ
 // ============================================================
 function initMusic() {
     const logoBtn = document.getElementById('logo-btn');
@@ -169,21 +137,13 @@ function initMusic() {
 }
 
 // ============================================================
-// 8. ЗАПУСК
+// 7. ЗАПУСК
 // ============================================================
-
-// Таймер — каждую секунду
 setInterval(updateTimer, 1000);
 updateTimer();
 
-// Прогресс — каждую секунду (значение меняется плавно)
-setInterval(updateProgress, 1000);
-updateProgress();
-
-// Фон — сразу + запланировать переход + резервная проверка раз в 10 секунд
 updateBackground();
 scheduleNextBackgroundChange();
 setInterval(updateBackground, 10000);
 
-// Музыка — после загрузки DOM
 document.addEventListener('DOMContentLoaded', initMusic);
