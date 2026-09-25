@@ -2,11 +2,10 @@
 // 1. НАСТРОЙКИ
 // ============================================================
 
-// Дата выхода GTA VI
 const targetDate = new Date('2026-11-19T00:00:00').getTime();
 
 // ============================================================
-// 2. ПЛАВНОЕ РАСТВОРЕНИЕ ЦИФР (без сдвигов)
+// 2. ПЛАВНОЕ РАСТВОРЕНИЕ ЦИФР
 // ============================================================
 function setDigit(id, value) {
     const el = document.getElementById(id);
@@ -15,10 +14,10 @@ function setDigit(id, value) {
     const newVal = value.toString().padStart(2, '0');
     if (el.innerText === newVal) return;
 
-    // Растворяем (opacity → 0)
+    // Растворяем — только opacity
     el.classList.add('fade-out');
 
-    // Когда цифра исчезла — меняем значение и проявляем обратно
+    // Меняем значение и проявляем обратно
     setTimeout(() => {
         el.innerText = newVal;
         el.classList.remove('fade-out');
@@ -26,7 +25,7 @@ function setDigit(id, value) {
 }
 
 // ============================================================
-// 3. ТАЙМЕР ОБРАТНОГО ОТСЧЁТА
+// 3. ТАЙМЕР
 // ============================================================
 function updateTimer() {
     const now = new Date().getTime();
@@ -38,8 +37,8 @@ function updateTimer() {
         return;
     }
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const days    = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours   = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -50,11 +49,10 @@ function updateTimer() {
 }
 
 // ============================================================
-// 4. СМЕНА ФОНА В ЗАВИСИМОСТИ ОТ ВРЕМЕНИ СУТОК
+// 4. СМЕНА ФОНА ПО ВРЕМЕНИ СУТОК
 // ============================================================
 function getCurrentBgId() {
     const hour = new Date().getHours();
-
     if (hour >= 6 && hour < 12)  return 'bg-morning';
     if (hour >= 12 && hour < 18) return 'bg-day';
     if (hour >= 18 && hour < 24) return 'bg-evening';
@@ -63,7 +61,6 @@ function getCurrentBgId() {
 
 function updateBackground() {
     const activeBgId = getCurrentBgId();
-
     document.querySelectorAll('.bg').forEach(bg => {
         bg.style.opacity = (bg.id === activeBgId) ? '1' : '0';
     });
@@ -90,10 +87,8 @@ function scheduleNextBackgroundChange() {
 }
 
 // ============================================================
-// 5. PARALLAX — ФОН СЛЕДУЕТ ЗА КУРСОРОМ
+// 5. PARALLAX — ФОН СЛЕДУЕТ ЗА КУРСОРОМ (в ту же сторону)
 // ============================================================
-// Знаки изменены на противоположные, чтобы фон двигался в ту же
-// сторону, куда движется курсор (раньше сдвиг был обратным).
 function applyParallax(x, y) {
     document.querySelectorAll('.bg').forEach(bg => {
         bg.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
@@ -101,16 +96,17 @@ function applyParallax(x, y) {
 }
 
 document.addEventListener('mousemove', (e) => {
-    // Cursor right → x > 0 → фон сдвигается вправо (следует за курсором)
-    const x = (e.clientX / window.innerWidth  - 0.5) * -30;
-    const y = (e.clientY / window.innerHeight - 0.5) * -30;
+    // Положительный множитель = фон сдвигается в ту же сторону, куда курсор.
+    // Курсор вправо → фон вправо. Курсор вверх → фон вверх.
+    const x = (e.clientX / window.innerWidth  - 0.5) * 30;
+    const y = (e.clientY / window.innerHeight - 0.5) * 30;
     applyParallax(x, y);
 });
 
 applyParallax(0, 0);
 
 // ============================================================
-// 6. УПРАВЛЕНИЕ МУЗЫКОЙ
+// 6. МУЗЫКА
 // ============================================================
 function initMusic() {
     const logoBtn = document.getElementById('logo-btn');
