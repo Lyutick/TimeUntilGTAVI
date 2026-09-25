@@ -6,7 +6,7 @@
 const targetDate = new Date('2026-11-19T00:00:00').getTime();
 
 // ============================================================
-// 2. ПЛАВНОЕ РАСТВОРЕНИЕ ЦИФР
+// 2. ПЛАВНОЕ РАСТВОРЕНИЕ ЦИФР (без сдвигов)
 // ============================================================
 function setDigit(id, value) {
     const el = document.getElementById(id);
@@ -15,10 +15,10 @@ function setDigit(id, value) {
     const newVal = value.toString().padStart(2, '0');
     if (el.innerText === newVal) return;
 
-    // Плавно растворяем (CSS-переход 0.3s)
+    // Растворяем (opacity → 0)
     el.classList.add('fade-out');
 
-    // Когда цифра полностью исчезла — меняем значение и проявляем обратно
+    // Когда цифра исчезла — меняем значение и проявляем обратно
     setTimeout(() => {
         el.innerText = newVal;
         el.classList.remove('fade-out');
@@ -90,8 +90,10 @@ function scheduleNextBackgroundChange() {
 }
 
 // ============================================================
-// 5. PARALLAX-ЭФФЕКТ
+// 5. PARALLAX — ФОН СЛЕДУЕТ ЗА КУРСОРОМ
 // ============================================================
+// Знаки изменены на противоположные, чтобы фон двигался в ту же
+// сторону, куда движется курсор (раньше сдвиг был обратным).
 function applyParallax(x, y) {
     document.querySelectorAll('.bg').forEach(bg => {
         bg.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
@@ -99,8 +101,9 @@ function applyParallax(x, y) {
 }
 
 document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth  - 0.5) * 30;
-    const y = (e.clientY / window.innerHeight - 0.5) * 30;
+    // Cursor right → x > 0 → фон сдвигается вправо (следует за курсором)
+    const x = (e.clientX / window.innerWidth  - 0.5) * -30;
+    const y = (e.clientY / window.innerHeight - 0.5) * -30;
     applyParallax(x, y);
 });
 
